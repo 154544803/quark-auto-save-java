@@ -1,4 +1,4 @@
-﻿package com.quark.autosave.service;
+package com.quark.autosave.service;
 
 import com.quark.autosave.config.AppProperties;
 import com.quark.autosave.model.runtime.TaskExecutionItem;
