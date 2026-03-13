@@ -32,11 +32,94 @@ jobs:
           tasks:
             - name: 仙逆
               account: primary
-              share-url: https://pan.quark.cn/s/your-share-id
-              save-path: /夸克自动转存/示例任务
-              pattern: ".*\\.mp4$"
+              # 使用你提供的夸克分享链接
+              share-url: https://pan.quark.cn/s/21c18f2ea6ab
+              # 转存到你夸克网盘中的目标目录
+              save-path: /动漫/仙逆
+              # 只转存视频文件
+              pattern: ".*\\.(mp4|mkv)$"
+              # 留空表示保持原文件名不变
               replace: ""
-              enabled: false
+              enabled: true
+              ignore-extension: false
+              # 1-7 表示周一到周日
+              run-week:
+                - 7
+            - name: 剑来
+              account: primary
+              # 使用你提供的夸克分享链接
+              share-url: https://pan.quark.cn/s/4feb19f0aee0
+              # 转存到你夸克网盘中的目标目录
+              save-path: /动漫/剑来
+              # 只转存视频文件
+              pattern: ".*\\.(mp4|mkv)$"
+              # 留空表示保持原文件名不变
+              replace: ""
+              enabled: true
+              ignore-extension: false
+              # 1-7 表示周一到周日
+              run-week:
+                - 3
+            - name: 遮天
+              account: primary
+              # 使用你提供的夸克分享链接
+              share-url: https://pan.quark.cn/s/074cf8985e45
+              # 转存到你夸克网盘中的目标目录
+              save-path: /动漫/遮天
+              # 只转存视频文件
+              pattern: ".*\\.(mp4|mkv)$"
+              # 留空表示保持原文件名不变
+              replace: ""
+              enabled: true
+              ignore-extension: false
+              # 1-7 表示周一到周日
+              run-week:
+                - 2
+            - name: 沧元图
+              account: primary
+              # 使用你提供的夸克分享链接
+              share-url: https://pan.quark.cn/s/25c00c84121e
+              # 转存到你夸克网盘中的目标目录
+              save-path: /动漫/沧元图
+              # 只转存视频文件
+              pattern: ".*\\.(mp4|mkv)$"
+              # 留空表示保持原文件名不变
+              replace: ""
+              enabled: true
+              ignore-extension: false
+              # 1-7 表示周一到周日
+              run-week:
+                - 5
+            - name: 斗罗大陆Ⅱ绝世唐门
+              account: primary
+              # 使用你提供的夸克分享链接
+              share-url: https://pan.quark.cn/s/fe78c334fb54
+              # 转存到你夸克网盘中的目标目录
+              save-path: /动漫/斗罗大陆Ⅱ绝世唐门
+              # 只转存视频文件
+              pattern: ".*\\.(mp4|mkv)$"
+              # 留空表示保持原文件名不变
+              replace: ""
+              enabled: true
+              ignore-extension: false
+              # 1-7 表示周一到周日
+              run-week:
+                - 5
+            - name: 斗破苍穹年番
+              account: primary
+              # 使用你提供的夸克分享链接
+              share-url: https://pan.quark.cn/s/19fbad9d7eb1
+              # 转存到你夸克网盘中的目标目录
+              save-path: /动漫/斗破苍穹年番
+              # 只转存视频文件
+              pattern: ".*\\.(mp4|mkv)$"
+              # 留空表示保持原文件名不变
+              replace: ""
+              enabled: true
+              ignore-extension: false
+              # 1-7 表示周一到周日
+              run-week:
+                - 6
           EOF
         env:
           QUARK_COOKIE: ${{ secrets.QUARK_COOKIE }}
