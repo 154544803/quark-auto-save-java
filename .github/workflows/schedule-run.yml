@@ -128,7 +128,7 @@ jobs:
         run: mvn -s settings.xml -B clean package -DskipTests
 
       - name: Run once mode
-        run: java -jar target/quark-auto-save-1.0.0-SNAPSHOT-exec.jar --app.run-mode=once --app.task-file=config/tasks.yml --app.notification.mail.enabled=false
+        run: java -jar target/quark-auto-save-1.0.0-SNAPSHOT-exec.jar --app.run-mode=once --app.task-file=config/tasks.yml --app.notification.mail.enabled=true
         env:
           QUARK_COOKIE: ${{ secrets.QUARK_COOKIE }}
           MAIL_HOST: ${{ secrets.MAIL_HOST }}
