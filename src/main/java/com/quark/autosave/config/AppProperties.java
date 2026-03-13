@@ -87,6 +87,7 @@ public class AppProperties {
 
         private boolean enabled;
         private String subjectPrefix = "[quark-auto-save]";
+        private String to;
 
         public boolean isEnabled() {
             return enabled;
@@ -102,6 +103,14 @@ public class AppProperties {
 
         public void setSubjectPrefix(String subjectPrefix) {
             this.subjectPrefix = subjectPrefix;
+        }
+
+        public String getTo() {
+            return to;
+        }
+
+        public void setTo(String to) {
+            this.to = to;
         }
     }
 }

@@ -32,6 +32,7 @@ app:
     mail:
       enabled: false
       subject-prefix: "[quark-auto-save]"
+      to: ${MAIL_TO:}
 
 logging:
   level:
