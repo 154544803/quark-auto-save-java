@@ -1,0 +1,54 @@
+name: Schedule Run
+
+on:
+  workflow_dispatch:
+  schedule:
+    # GitHub Actions 使用 UTC，这里 12:00 UTC 等于北京时间 20:00
+    - cron: "0 12 * * *"
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Prepare task config
+        shell: bash
+        run: |
+          mkdir -p config
+          cat <<'EOF' > config/tasks.yml
+          accounts:
+            - name: primary
+              cookie: ${QUARK_COOKIE}
+
+          tasks:
+            - name: 仙逆
+              account: primary
+              share-url: https://pan.quark.cn/s/your-share-id
+              save-path: /夸克自动转存/示例任务
+              pattern: ".*\\.mp4$"
+              replace: ""
+              enabled: false
+          EOF
+        env:
+          QUARK_COOKIE: ${{ secrets.QUARK_COOKIE }}
+
+      - name: Build project
+        run: mvn -s settings.xml -B clean package -DskipTests
+
+      - name: Run once mode
+        run: java -jar target/quark-auto-save-1.0.0-SNAPSHOT-exec.jar --app.run-mode=once --app.task-file=config/tasks.yml --app.notification.mail.enabled=true
+        env:
+          QUARK_COOKIE: ${{ secrets.QUARK_COOKIE }}
+          MAIL_HOST: ${{ secrets.MAIL_HOST }}
+          MAIL_PORT: ${{ secrets.MAIL_PORT }}
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}

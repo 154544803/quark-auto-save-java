@@ -1,0 +1,17 @@
+accounts:
+  - name: primary
+    cookie: ${QUARK_COOKIE:demo-cookie}
+
+tasks:
+  - name: demo-task
+    account: primary
+    share-url: https://pan.quark.cn/s/your-share-id
+    save-path: /夸克自动转存/示例任务
+    pattern: ".*\\.mp4$"
+    replace: ""
+    enabled: false
+    ignore-extension: false
+    run-week:
+      - 1
+      - 3
+      - 5

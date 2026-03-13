@@ -1,0 +1,41 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: quark-auto-save
+  mail:
+    host: ${MAIL_HOST:}
+    port: ${MAIL_PORT:465}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: ${MAIL_SSL_ENABLE:true}
+          starttls:
+            enable: ${MAIL_STARTTLS_ENABLE:false}
+
+app:
+  run-mode: server
+  startup-run: false
+  task-file: config/tasks.yml
+  schedule:
+    enabled: true
+    # 每天北京时间 20:00 执行
+    cron: "0 0 20 * * *"
+    zone: "Asia/Shanghai"
+  notification:
+    mail:
+      enabled: false
+      subject-prefix: "[quark-auto-save]"
+
+logging:
+  level:
+    root: INFO
+    com.quark.autosave: INFO
+  file:
+    name: logs/quark-auto-save.log

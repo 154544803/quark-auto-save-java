@@ -1,0 +1,10 @@
+accounts:
+  - name: primary
+    cookie: cookie-value
+
+tasks:
+  - name: demo-task
+    account: missing
+    share-url: https://pan.quark.cn/s/demo
+    save-path: /demo
+    enabled: true

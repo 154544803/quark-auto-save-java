@@ -1,0 +1,12 @@
+accounts:
+  - name: primary
+    cookie: ${QUARK_COOKIE}
+
+tasks:
+  - name: demo-task
+    account: primary
+    share-url: https://pan.quark.cn/s/demo
+    save-path: /demo
+    pattern: .*.mp4$
+    replace: ""
+    enabled: true
