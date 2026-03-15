@@ -12,8 +12,8 @@
         <div class="hero-copy">
             <p class="eyebrow">Web Console</p>
             <h1>任务管理台</h1>
-            <p class="subtitle">用结构化表单管理账号和任务，手动执行转存，并保留高级 YAML 模式作为兜底入口。</p>
-            <div id="stats-strip" class="stats-strip">
+            <p class="subtitle">保持当前功能和数据流不变，以更清晰的结构管理账号、任务与配置。</p>
+            <div id="stats-strip" class="stats-strip hero-metrics">
                 <article class="stat-chip">
                     <span class="stat-label">账号</span>
                     <strong id="account-count">0</strong>
@@ -38,65 +38,71 @@
         </div>
     </section>
 
-    <section id="account-section" class="panel">
-        <div class="panel-header">
-            <div>
-                <p class="eyebrow">Accounts</p>
-                <h2>账号管理</h2>
-                <p class="panel-description">集中维护 Quark 账号和 Cookie，任务通过账号名称引用。</p>
-            </div>
-            <button id="add-account-button" class="secondary-button" type="button">新增账号</button>
-        </div>
-        <div id="account-list" class="card-collection"></div>
-    </section>
-
-    <section id="task-section" class="panel">
-        <div class="panel-header">
-            <div>
-                <p class="eyebrow">Tasks</p>
-                <h2>任务管理</h2>
-                <p class="panel-description">按任务维度查看启用状态、保存路径和运行限制，支持单独执行。</p>
-            </div>
-            <button id="add-task-button" class="primary-button" type="button">新增任务</button>
-        </div>
-        <div id="task-list" class="card-collection"></div>
-    </section>
-
-    <section id="history-section" class="panel">
-        <div class="panel-header">
-            <div>
-                <p class="eyebrow">Recent Runs</p>
-                <h2>最近执行记录</h2>
-                <p class="panel-description">仅保留进程内最近执行结果，方便确认手动触发是否成功。</p>
-            </div>
-        </div>
-        <div id="history-list" class="history-list"></div>
-    </section>
-
-    <section id="config-actions-section" class="panel panel-wide">
-        <div class="panel-header">
-            <div>
-                <p class="eyebrow">Configuration</p>
-                <h2>配置操作</h2>
-                <p class="panel-description">默认通过表单编辑常用字段；高级模式可直接编辑原始 YAML。</p>
-            </div>
-            <div class="panel-actions">
-                <button id="validate-config" class="secondary-button" type="button">校验配置</button>
-                <button id="advanced-config-toggle" class="secondary-button" type="button">高级模式</button>
-                <button id="save-all-config" class="primary-button" type="button">保存全部配置</button>
-            </div>
-        </div>
-        <p id="config-message" class="message" hidden></p>
-        <section id="advanced-config-panel" class="advanced-config-panel" hidden>
-            <div class="advanced-config-header">
-                <div>
-                    <h3>原始 YAML</h3>
-                    <p>适合处理当前表单尚未覆盖的字段。保存时仍会经过后端校验。</p>
+    <section class="dashboard-main">
+        <div class="dashboard-primary">
+            <section id="account-section" class="panel">
+                <div class="panel-header">
+                    <div class="panel-header-copy">
+                        <p class="eyebrow">Accounts</p>
+                        <h2>账号管理</h2>
+                        <p class="panel-description">集中维护 Quark 账号和 Cookie，任务通过账号名称引用。</p>
+                    </div>
+                    <button id="add-account-button" class="secondary-button" type="button">新增账号</button>
                 </div>
-                <button id="save-advanced-config" class="secondary-button" type="button">保存高级配置</button>
-            </div>
-            <textarea id="config-editor" class="config-editor" spellcheck="false"></textarea>
-        </section>
+                <div id="account-list" class="card-collection"></div>
+            </section>
+
+            <section id="task-section" class="panel">
+                <div class="panel-header">
+                    <div class="panel-header-copy">
+                        <p class="eyebrow">Tasks</p>
+                        <h2>任务管理</h2>
+                        <p class="panel-description">按任务维度查看启用状态、保存路径和运行限制，支持单独执行。</p>
+                    </div>
+                    <button id="add-task-button" class="primary-button" type="button">新增任务</button>
+                </div>
+                <div id="task-list" class="card-collection"></div>
+            </section>
+        </div>
+
+        <aside class="dashboard-secondary">
+            <section id="history-section" class="panel panel-side">
+                <div class="panel-header">
+                    <div class="panel-header-copy">
+                        <p class="eyebrow">Recent Runs</p>
+                        <h2>最近执行记录</h2>
+                        <p class="panel-description">保留最近的手动执行结果，方便确认本次触发是否成功。</p>
+                    </div>
+                </div>
+                <div id="history-list" class="history-list"></div>
+            </section>
+
+            <section id="config-actions-section" class="panel panel-side">
+                <div class="panel-header">
+                    <div class="panel-header-copy">
+                        <p class="eyebrow">Configuration</p>
+                        <h2>配置操作</h2>
+                        <p class="panel-description">优先使用表单维护常用字段，高级模式继续保留原始 YAML 编辑入口。</p>
+                    </div>
+                    <div class="panel-actions">
+                        <button id="validate-config" class="secondary-button" type="button">校验配置</button>
+                        <button id="advanced-config-toggle" class="secondary-button" type="button">高级模式</button>
+                        <button id="save-all-config" class="primary-button" type="button">保存全部配置</button>
+                    </div>
+                </div>
+                <p id="config-message" class="message" hidden></p>
+                <section id="advanced-config-panel" class="advanced-config-panel" hidden>
+                    <div class="advanced-config-header">
+                        <div>
+                            <h3>原始 YAML</h3>
+                            <p>适合补充当前表单尚未覆盖的字段，保存时仍会经过后端校验。</p>
+                        </div>
+                        <button id="save-advanced-config" class="secondary-button" type="button">保存高级配置</button>
+                    </div>
+                    <textarea id="config-editor" class="config-editor" spellcheck="false"></textarea>
+                </section>
+            </section>
+        </aside>
     </section>
 </main>
 

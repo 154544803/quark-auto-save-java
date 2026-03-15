@@ -23,7 +23,10 @@ class WebConsolePageRenderingTest {
         mockMvc.perform(get("/login"))
             .andExpect(status().isOk())
             .andExpect(content().string(containsString("login-form")))
-            .andExpect(content().string(containsString("Quark Auto Save")));
+            .andExpect(content().string(containsString("Quark Auto Save")))
+            .andExpect(content().string(containsString("登录")))
+            .andExpect(content().string(containsString("用户登录后可管理账号和任务")))
+            .andExpect(content().string(containsString("primary-button")));
     }
 
     @Test
@@ -41,9 +44,28 @@ class WebConsolePageRenderingTest {
             .andExpect(content().string(containsString("stats-strip")))
             .andExpect(content().string(containsString("card-collection")))
             .andExpect(content().string(containsString("drawer-surface")))
+            .andExpect(content().string(containsString("dashboard-main")))
+            .andExpect(content().string(containsString("dashboard-primary")))
+            .andExpect(content().string(containsString("dashboard-secondary")))
+            .andExpect(content().string(containsString("hero-actions")))
             .andExpect(content().string(containsString("Quark Cookie")))
+            .andExpect(content().string(containsString("任务管理台")))
+            .andExpect(content().string(containsString("账号管理")))
+            .andExpect(content().string(containsString("任务管理")))
+            .andExpect(content().string(containsString("最近执行记录")))
+            .andExpect(content().string(containsString("高级模式")))
             .andExpect(content().string(containsString("文件匹配规则")))
             .andExpect(content().string(containsString("支持正则")))
             .andExpect(content().string(containsString("周一")));
+    }
+
+    @Test
+    void shouldRenderVisualScaffoldingClassesForPolishedLayout() throws Exception {
+        mockMvc.perform(get("/").sessionAttr("webConsoleUser", "admin"))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("hero-metrics")))
+            .andExpect(content().string(containsString("panel-header-copy")))
+            .andExpect(content().string(containsString("panel-side")))
+            .andExpect(content().string(containsString("drawer-actions-end")));
     }
 }

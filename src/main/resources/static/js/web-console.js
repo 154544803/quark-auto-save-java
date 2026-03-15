@@ -112,7 +112,7 @@
         function renderAccounts(currentState) {
             const container = document.getElementById("account-list");
             if (!currentState.accounts.length) {
-                container.innerHTML = '<div class="empty-state">还没有账号，先新增一个 Quark 账号再创建任务。</div>';
+                container.innerHTML = '<div class="empty-state">还没有账号，先新增一个 Quark 账号，再开始创建任务。</div>';
                 return;
             }
 
@@ -124,18 +124,18 @@
                     '      <p class="card-kicker">Account</p>',
                     '      <h3>' + escapeHtml(account.name) + '</h3>',
                     '    </div>',
-                    '    <span class="status-pill' + (account.cookieConfigured ? '' : ' off') + '">',
-                    account.cookieConfigured ? 'Cookie 已配置' : 'Cookie 缺失',
-                    '    </span>',
-                    '  </div>',
+                    '    <span class="status-pill' + (account.cookieConfigured ? "" : " off") + '">',
+                    account.cookieConfigured ? "Cookie 已配置" : "Cookie 缺失",
+                    "    </span>",
+                    "  </div>",
                     '  <dl class="meta-list">',
-                    '    <div><dt>关联任务</dt><dd>' + (account.taskCount || 0) + '</dd></div>',
-                    '    <div><dt>Cookie</dt><dd>' + maskCookie(account.cookie) + '</dd></div>',
-                    '  </dl>',
+                    "    <div><dt>关联任务</dt><dd>" + (account.taskCount || 0) + "</dd></div>",
+                    "    <div><dt>Cookie</dt><dd>" + maskCookie(account.cookie) + "</dd></div>",
+                    "  </dl>",
                     '  <div class="card-actions">',
                     '    <button class="secondary-button" type="button" data-edit-account="' + index + '">编辑</button>',
-                    '  </div>',
-                    '</article>'
+                    "  </div>",
+                    "</article>"
                 ].join("");
             }).join("");
 
@@ -149,7 +149,7 @@
         function renderTasks(currentState) {
             const container = document.getElementById("task-list");
             if (!currentState.tasks.length) {
-                container.innerHTML = '<div class="empty-state">还没有任务，新增任务后就能从这里查看和执行。</div>';
+                container.innerHTML = '<div class="empty-state">还没有任务，新增任务后就能在这里查看和执行。</div>';
                 return;
             }
 
@@ -161,21 +161,21 @@
                     '      <p class="card-kicker">Task</p>',
                     '      <h3>' + escapeHtml(task.name) + '</h3>',
                     '    </div>',
-                    '    <span class="status-pill' + (task.enabled ? '' : ' off') + '">',
-                    task.enabled ? '启用中' : '已停用',
-                    '    </span>',
-                    '  </div>',
+                    '    <span class="status-pill' + (task.enabled ? "" : " off") + '">',
+                    task.enabled ? "启用中" : "已停用",
+                    "    </span>",
+                    "  </div>",
                     '  <dl class="meta-list">',
-                    '    <div><dt>所属账号</dt><dd>' + escapeHtml(task.account || "-") + '</dd></div>',
-                    '    <div><dt>保存路径</dt><dd>' + escapeHtml(task.savePath || "-") + '</dd></div>',
-                    '    <div><dt>运行星期</dt><dd>' + escapeHtml(formatRunWeek(task.runWeek)) + '</dd></div>',
-                    '    <div><dt>结束日期</dt><dd>' + escapeHtml(task.endDate || "未设置") + '</dd></div>',
-                    '  </dl>',
+                    "    <div><dt>所属账号</dt><dd>" + escapeHtml(task.account || "-") + "</dd></div>",
+                    "    <div><dt>保存路径</dt><dd>" + escapeHtml(task.savePath || "-") + "</dd></div>",
+                    "    <div><dt>运行星期</dt><dd>" + escapeHtml(formatRunWeek(task.runWeek)) + "</dd></div>",
+                    "    <div><dt>结束日期</dt><dd>" + escapeHtml(task.endDate || "未设置") + "</dd></div>",
+                    "  </dl>",
                     '  <div class="card-actions">',
                     '    <button class="ghost-button" type="button" data-run-task="' + escapeAttribute(task.name) + '">执行任务</button>',
                     '    <button class="secondary-button" type="button" data-edit-task="' + index + '">编辑</button>',
-                    '  </div>',
-                    '</article>'
+                    "  </div>",
+                    "</article>"
                 ].join("");
             }).join("");
 
@@ -205,17 +205,17 @@
                     '  <div class="config-card-header">',
                     '    <div>',
                     '      <p class="card-kicker">Manual Run</p>',
-                    '      <h3>' + escapeHtml(entry.trigger || "未知任务") + '</h3>',
-                    '      <p class="history-meta">' + escapeHtml(formatDateTime(entry.recordedAt)) + '</p>',
-                    '    </div>',
+                    '      <h3>' + escapeHtml(entry.trigger || "未知任务") + "</h3>",
+                    '      <p class="history-meta">' + escapeHtml(formatDateTime(entry.recordedAt)) + "</p>",
+                    "    </div>",
                     '    <span class="status-pill">已记录</span>',
-                    '  </div>',
+                    "  </div>",
                     '  <div class="history-summary">',
-                    '    <span><strong>成功</strong>' + (summary.successCount || 0) + '</span>',
-                    '    <span><strong>失败</strong>' + (summary.failureCount || 0) + '</span>',
-                    '    <span><strong>跳过</strong>' + (summary.skipCount || 0) + '</span>',
-                    '  </div>',
-                    '</article>'
+                    "    <span><strong>成功</strong>" + (summary.successCount || 0) + "</span>",
+                    "    <span><strong>失败</strong>" + (summary.failureCount || 0) + "</span>",
+                    "    <span><strong>跳过</strong>" + (summary.skipCount || 0) + "</span>",
+                    "  </div>",
+                    "</article>"
                 ].join("");
             }).join("");
         }
@@ -309,7 +309,7 @@
             document.getElementById("task-drawer-title").textContent = index === null ? "新增任务" : "编辑任务";
             const accountSelect = document.getElementById("task-account");
             accountSelect.innerHTML = currentState.accounts.map(function (account) {
-                return '<option value="' + escapeAttribute(account.name) + '">' + escapeHtml(account.name) + '</option>';
+                return '<option value="' + escapeAttribute(account.name) + '">' + escapeHtml(account.name) + "</option>";
             }).join("");
             accountSelect.value = draft.account || "";
 
@@ -503,6 +503,7 @@
             }
         }
 
+        // 重新计算账号关联任务数，保证摘要卡片和保存数据保持一致。
         function syncAccountTaskCounts(currentState) {
             currentState.accounts = currentState.accounts.map(function (account) {
                 const taskCount = currentState.tasks.filter(function (task) {
