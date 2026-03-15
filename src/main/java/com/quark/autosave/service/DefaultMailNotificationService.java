@@ -6,6 +6,7 @@ import com.quark.autosave.model.runtime.TaskExecutionSummary;
 import java.util.Date;
 import java.util.StringJoiner;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,9 @@ import org.springframework.util.StringUtils;
 
 @Service
 public class DefaultMailNotificationService implements MailNotificationService {
+
+    @Value("${spring.mail.username}")
+    private String mailFrom;
 
     private final ObjectProvider<JavaMailSender> javaMailSenderProvider;
     private final AppProperties appProperties;
@@ -43,7 +47,7 @@ public class DefaultMailNotificationService implements MailNotificationService {
         message.setSubject(appProperties.getNotification().getMail().getSubjectPrefix() + " 执行结果");
         message.setText(buildContent(summary));
         message.setSentDate(new Date());
-        message.setFrom("154544803@qq.com");
+        message.setFrom(mailFrom);
         javaMailSender.send(message);
     }
 
