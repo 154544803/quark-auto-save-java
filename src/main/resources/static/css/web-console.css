@@ -440,6 +440,11 @@ h3 {
     z-index: 20;
 }
 
+/* 显式覆盖抽屉容器的 display，避免 hidden 属性被类样式顶掉后出现空白侧栏。 */
+.drawer-panel[hidden] {
+    display: none;
+}
+
 .drawer-surface {
     width: min(700px, 100%);
     height: 100%;

@@ -26,4 +26,15 @@ class WebConsoleStaticResourceTest {
             .contains("还没有任务，新增任务后就能在这里查看和执行。")
             .contains("还没有手动执行记录。");
     }
+    @Test
+    void shouldHideDrawerPanelWhenHiddenAttributeIsPresent() throws Exception {
+        String style = Files.readString(
+            Path.of("src/main/resources/static/css/web-console.css"),
+            StandardCharsets.UTF_8
+        );
+
+        assertThat(style)
+            .contains(".drawer-panel[hidden]")
+            .contains("display: none");
+    }
 }
