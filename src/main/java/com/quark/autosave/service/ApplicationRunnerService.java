@@ -5,10 +5,10 @@ import com.quark.autosave.config.TaskConfigLoader;
 import com.quark.autosave.model.config.TaskDefinition;
 import com.quark.autosave.model.config.TaskFileConfig;
 import com.quark.autosave.model.runtime.TaskExecutionSummary;
+import com.quark.autosave.model.web.TaskView;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,8 +26,10 @@ public class ApplicationRunnerService {
         this.taskExecutionService = taskExecutionService;
     }
 
-    public List<String> listTaskNames() {
-        return loadTaskFile().getTasks().stream().map(TaskDefinition::getName).collect(Collectors.toList());
+    public List<TaskView> listTasks() {
+        return loadTaskFile().getTasks().stream()
+            .map(this::toTaskView)
+            .toList();
     }
 
     public TaskExecutionSummary runAllOnce() {
@@ -46,5 +48,16 @@ public class ApplicationRunnerService {
 
     private TaskFileConfig loadTaskFile() {
         return taskConfigLoader.load(Path.of(appProperties.getTaskFile()));
+    }
+
+    private TaskView toTaskView(TaskDefinition taskDefinition) {
+        return new TaskView(
+            taskDefinition.getName(),
+            taskDefinition.getAccount(),
+            taskDefinition.getSavePath(),
+            taskDefinition.isEnabled(),
+            taskDefinition.getRunWeek(),
+            taskDefinition.getEndDate()
+        );
     }
 }
