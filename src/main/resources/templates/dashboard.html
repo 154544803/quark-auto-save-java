@@ -9,10 +9,28 @@
 <body class="page page-dashboard" data-page="dashboard">
 <main class="dashboard-shell">
     <section class="hero-card">
-        <div>
+        <div class="hero-copy">
             <p class="eyebrow">Web Console</p>
             <h1>任务管理台</h1>
-            <p class="subtitle">查看任务、手动执行、编辑 `tasks.yml`，同时保持 GitHub Actions 的 `once` 流程不变。</p>
+            <p class="subtitle">用结构化表单管理账号和任务，手动执行转存，并保留高级 YAML 模式作为兜底入口。</p>
+            <div id="stats-strip" class="stats-strip">
+                <article class="stat-chip">
+                    <span class="stat-label">账号</span>
+                    <strong id="account-count">0</strong>
+                </article>
+                <article class="stat-chip">
+                    <span class="stat-label">任务</span>
+                    <strong id="task-total-count">0</strong>
+                </article>
+                <article class="stat-chip">
+                    <span class="stat-label">已启用</span>
+                    <strong id="task-enabled-count">0</strong>
+                </article>
+                <article class="stat-chip">
+                    <span class="stat-label">最近执行</span>
+                    <strong id="last-run-at">暂无</strong>
+                </article>
+            </div>
         </div>
         <div class="hero-actions">
             <button id="run-all" class="primary-button" type="button">执行全部任务</button>
@@ -20,40 +38,194 @@
         </div>
     </section>
 
-    <section class="panel">
+    <section id="account-section" class="panel">
+        <div class="panel-header">
+            <div>
+                <p class="eyebrow">Accounts</p>
+                <h2>账号管理</h2>
+                <p class="panel-description">集中维护 Quark 账号和 Cookie，任务通过账号名称引用。</p>
+            </div>
+            <button id="add-account-button" class="secondary-button" type="button">新增账号</button>
+        </div>
+        <div id="account-list" class="card-collection"></div>
+    </section>
+
+    <section id="task-section" class="panel">
         <div class="panel-header">
             <div>
                 <p class="eyebrow">Tasks</p>
-                <h2>任务列表</h2>
+                <h2>任务管理</h2>
+                <p class="panel-description">按任务维度查看启用状态、保存路径和运行限制，支持单独执行。</p>
             </div>
-            <span id="task-count" class="panel-meta">0 个任务</span>
+            <button id="add-task-button" class="primary-button" type="button">新增任务</button>
         </div>
-        <div id="task-list" class="task-list"></div>
+        <div id="task-list" class="card-collection"></div>
     </section>
 
-    <section class="panel">
+    <section id="history-section" class="panel">
         <div class="panel-header">
             <div>
                 <p class="eyebrow">Recent Runs</p>
                 <h2>最近执行记录</h2>
+                <p class="panel-description">仅保留进程内最近执行结果，方便确认手动触发是否成功。</p>
             </div>
-            <span class="panel-meta">仅保留内存中的最近结果</span>
         </div>
         <div id="history-list" class="history-list"></div>
     </section>
 
-    <section class="panel panel-wide">
+    <section id="config-actions-section" class="panel panel-wide">
         <div class="panel-header">
             <div>
                 <p class="eyebrow">Configuration</p>
-                <h2>tasks.yml</h2>
+                <h2>配置操作</h2>
+                <p class="panel-description">默认通过表单编辑常用字段；高级模式可直接编辑原始 YAML。</p>
             </div>
-            <button id="save-config" class="primary-button" type="button">保存配置</button>
+            <div class="panel-actions">
+                <button id="validate-config" class="secondary-button" type="button">校验配置</button>
+                <button id="advanced-config-toggle" class="secondary-button" type="button">高级模式</button>
+                <button id="save-all-config" class="primary-button" type="button">保存全部配置</button>
+            </div>
         </div>
-        <textarea id="config-editor" class="config-editor" spellcheck="false"></textarea>
         <p id="config-message" class="message" hidden></p>
+        <section id="advanced-config-panel" class="advanced-config-panel" hidden>
+            <div class="advanced-config-header">
+                <div>
+                    <h3>原始 YAML</h3>
+                    <p>适合处理当前表单尚未覆盖的字段。保存时仍会经过后端校验。</p>
+                </div>
+                <button id="save-advanced-config" class="secondary-button" type="button">保存高级配置</button>
+            </div>
+            <textarea id="config-editor" class="config-editor" spellcheck="false"></textarea>
+        </section>
     </section>
 </main>
+
+<div id="drawer-panel" class="drawer-panel" hidden>
+    <div id="drawer-surface" class="drawer-surface"></div>
+</div>
+
+<template id="account-drawer-template">
+    <form id="account-form" class="drawer-form">
+        <div class="drawer-header">
+            <div>
+                <p class="eyebrow">Account</p>
+                <h2 id="account-drawer-title">账号设置</h2>
+            </div>
+            <button id="close-drawer-button" class="icon-button" type="button" aria-label="关闭">×</button>
+        </div>
+        <p id="account-form-message" class="message" hidden></p>
+        <section class="form-group">
+            <h3>基础信息</h3>
+            <label class="field">
+                <span>账号名称</span>
+                <small>任务通过这个名称绑定账号，保存前必须唯一。</small>
+                <input id="account-name" name="name" type="text" required>
+            </label>
+            <label class="field">
+                <span>Quark Cookie</span>
+                <small>从浏览器复制 Cookie，程序用它完成自动转存。</small>
+                <textarea id="account-cookie" name="cookie" rows="6" required></textarea>
+            </label>
+        </section>
+        <div class="drawer-actions">
+            <button id="delete-account-button" class="ghost-button danger-text" type="button">删除账号</button>
+            <div class="drawer-actions-end">
+                <button id="cancel-account-button" class="secondary-button" type="button">取消</button>
+                <button class="primary-button" type="submit">保存账号</button>
+            </div>
+        </div>
+    </form>
+</template>
+
+<template id="task-drawer-template">
+    <form id="task-form" class="drawer-form">
+        <div class="drawer-header">
+            <div>
+                <p class="eyebrow">Task</p>
+                <h2 id="task-drawer-title">任务设置</h2>
+            </div>
+            <button id="close-drawer-button" class="icon-button" type="button" aria-label="关闭">×</button>
+        </div>
+        <p id="task-form-message" class="message" hidden></p>
+        <section class="form-group">
+            <h3>基础信息</h3>
+            <div class="field-grid">
+                <label class="field">
+                    <span>任务名称</span>
+                    <small>用于区分任务和执行入口，保存前必须唯一。</small>
+                    <input id="task-name" name="name" type="text" required>
+                </label>
+                <label class="field">
+                    <span>绑定账号</span>
+                    <small>从已配置的 Quark 账号中选择一个。</small>
+                    <select id="task-account" name="account" required></select>
+                </label>
+            </div>
+            <label class="toggle-field">
+                <input id="task-enabled" name="enabled" type="checkbox">
+                <span>启用任务</span>
+            </label>
+        </section>
+        <section class="form-group">
+            <h3>转存规则</h3>
+            <label class="field">
+                <span>分享链接</span>
+                <small>填写 Quark 分享地址，例如 `https://pan.quark.cn/s/xxxx`。</small>
+                <input id="task-share-url" name="shareUrl" type="url" required>
+            </label>
+            <label class="field">
+                <span>保存路径</span>
+                <small>例如 `/夸克自动转存/电视剧`。</small>
+                <input id="task-save-path" name="savePath" type="text" required>
+            </label>
+            <div class="field-grid">
+                <label class="field">
+                    <span>文件匹配规则</span>
+                    <small>支持正则，例如 `.*\.mp4$` 表示只匹配 MP4 文件。</small>
+                    <input id="task-pattern" name="pattern" type="text">
+                </label>
+                <label class="field">
+                    <span>文件名替换规则</span>
+                    <small>可留空；保存前会对匹配到的文件名做替换。</small>
+                    <input id="task-replace" name="replace" type="text">
+                </label>
+            </div>
+            <label class="toggle-field">
+                <input id="task-ignore-extension" name="ignoreExtension" type="checkbox">
+                <span>忽略扩展名</span>
+            </label>
+        </section>
+        <section class="form-group">
+            <h3>调度限制</h3>
+            <div class="field">
+                <span>运行星期</span>
+                <small>未选择表示不限制星期。可多选周一到周日。</small>
+                <div class="weekday-group">
+                    <label class="weekday-option"><input type="checkbox" value="1">周一</label>
+                    <label class="weekday-option"><input type="checkbox" value="2">周二</label>
+                    <label class="weekday-option"><input type="checkbox" value="3">周三</label>
+                    <label class="weekday-option"><input type="checkbox" value="4">周四</label>
+                    <label class="weekday-option"><input type="checkbox" value="5">周五</label>
+                    <label class="weekday-option"><input type="checkbox" value="6">周六</label>
+                    <label class="weekday-option"><input type="checkbox" value="7">周日</label>
+                </div>
+            </div>
+            <label class="field">
+                <span>结束日期</span>
+                <small>可选；到达该日期后不再执行。</small>
+                <input id="task-end-date" name="endDate" type="date">
+            </label>
+        </section>
+        <div class="drawer-actions">
+            <button id="delete-task-button" class="ghost-button danger-text" type="button">删除任务</button>
+            <div class="drawer-actions-end">
+                <button id="cancel-task-button" class="secondary-button" type="button">取消</button>
+                <button class="primary-button" type="submit">保存任务</button>
+            </div>
+        </div>
+    </form>
+</template>
+
 <script th:src="@{/js/web-console.js}"></script>
 </body>
 </html>

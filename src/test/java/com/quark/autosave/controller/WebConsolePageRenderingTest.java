@@ -19,11 +19,31 @@ class WebConsolePageRenderingTest {
     private MockMvc mockMvc;
 
     @Test
-    void shouldRenderDashboardSectionsForAuthenticatedUser() throws Exception {
+    void shouldRenderLoginFormForAnonymousUser() throws Exception {
+        mockMvc.perform(get("/login"))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("login-form")))
+            .andExpect(content().string(containsString("Quark Auto Save")));
+    }
+
+    @Test
+    void shouldRenderFormFirstDashboardSectionsForAuthenticatedUser() throws Exception {
         mockMvc.perform(get("/").sessionAttr("webConsoleUser", "admin"))
             .andExpect(status().isOk())
-            .andExpect(content().string(containsString("任务列表")))
-            .andExpect(content().string(containsString("最近执行记录")))
-            .andExpect(content().string(containsString("tasks.yml")));
+            .andExpect(content().string(containsString("account-section")))
+            .andExpect(content().string(containsString("task-section")))
+            .andExpect(content().string(containsString("history-section")))
+            .andExpect(content().string(containsString("advanced-config-toggle")))
+            .andExpect(content().string(containsString("drawer-panel")))
+            .andExpect(content().string(containsString("add-account-button")))
+            .andExpect(content().string(containsString("add-task-button")))
+            .andExpect(content().string(containsString("save-all-config")))
+            .andExpect(content().string(containsString("stats-strip")))
+            .andExpect(content().string(containsString("card-collection")))
+            .andExpect(content().string(containsString("drawer-surface")))
+            .andExpect(content().string(containsString("Quark Cookie")))
+            .andExpect(content().string(containsString("文件匹配规则")))
+            .andExpect(content().string(containsString("支持正则")))
+            .andExpect(content().string(containsString("周一")));
     }
 }
