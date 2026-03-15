@@ -86,7 +86,7 @@ public class AppProperties {
     public static class MailProperties {
 
         private boolean enabled;
-        private String subjectPrefix = "[quark-auto-save]";
+        private String subjectPrefix = "网盘自动转存";
         private String to;
 
         public boolean isEnabled() {

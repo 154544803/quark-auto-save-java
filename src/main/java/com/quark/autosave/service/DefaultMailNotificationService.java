@@ -3,6 +3,7 @@ package com.quark.autosave.service;
 import com.quark.autosave.config.AppProperties;
 import com.quark.autosave.model.runtime.TaskExecutionItem;
 import com.quark.autosave.model.runtime.TaskExecutionSummary;
+import java.util.Date;
 import java.util.StringJoiner;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.mail.SimpleMailMessage;
@@ -41,6 +42,8 @@ public class DefaultMailNotificationService implements MailNotificationService {
         message.setTo(receiver);
         message.setSubject(appProperties.getNotification().getMail().getSubjectPrefix() + " 执行结果");
         message.setText(buildContent(summary));
+        message.setSentDate(new Date());
+        message.setFrom("154544803@qq.com");
         javaMailSender.send(message);
     }
 
