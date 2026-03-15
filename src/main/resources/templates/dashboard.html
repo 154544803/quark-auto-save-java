@@ -4,10 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quark Auto Save Console</title>
+    <link rel="stylesheet" th:href="@{/css/web-console.css}">
 </head>
-<body>
-<main>
-    <h1>Web Console</h1>
+<body class="page page-dashboard" data-page="dashboard">
+<main class="dashboard-shell">
+    <section class="hero-card">
+        <div>
+            <p class="eyebrow">Web Console</p>
+            <h1>任务管理台</h1>
+            <p class="subtitle">查看任务、手动执行、编辑 `tasks.yml`，同时保持 GitHub Actions 的 `once` 流程不变。</p>
+        </div>
+        <div class="hero-actions">
+            <button id="run-all" class="primary-button" type="button">执行全部任务</button>
+            <button id="logout-button" class="secondary-button" type="button">退出登录</button>
+        </div>
+    </section>
+
+    <section class="panel">
+        <div class="panel-header">
+            <div>
+                <p class="eyebrow">Tasks</p>
+                <h2>任务列表</h2>
+            </div>
+            <span id="task-count" class="panel-meta">0 个任务</span>
+        </div>
+        <div id="task-list" class="task-list"></div>
+    </section>
+
+    <section class="panel">
+        <div class="panel-header">
+            <div>
+                <p class="eyebrow">Recent Runs</p>
+                <h2>最近执行记录</h2>
+            </div>
+            <span class="panel-meta">仅保留内存中的最近结果</span>
+        </div>
+        <div id="history-list" class="history-list"></div>
+    </section>
+
+    <section class="panel panel-wide">
+        <div class="panel-header">
+            <div>
+                <p class="eyebrow">Configuration</p>
+                <h2>tasks.yml</h2>
+            </div>
+            <button id="save-config" class="primary-button" type="button">保存配置</button>
+        </div>
+        <textarea id="config-editor" class="config-editor" spellcheck="false"></textarea>
+        <p id="config-message" class="message" hidden></p>
+    </section>
 </main>
+<script th:src="@{/js/web-console.js}"></script>
 </body>
 </html>

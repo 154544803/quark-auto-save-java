@@ -4,14 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quark Auto Save Login</title>
+    <link rel="stylesheet" th:href="@{/css/web-console.css}">
 </head>
-<body>
-<main>
-    <h1>Quark Auto Save</h1>
-    <form>
-        <input type="text" name="username">
-        <input type="password" name="password">
-    </form>
+<body class="page page-login" data-page="login">
+<main class="login-shell">
+    <section class="login-card">
+        <p class="eyebrow">Quark Auto Save</p>
+        <h1>登录后管理任务与配置</h1>
+        <p class="subtitle">保持 `once` 模式给 GitHub Actions 使用，常驻服务模式负责管理台。</p>
+        <form id="login-form" class="stack">
+            <label class="field">
+                <span>用户名</span>
+                <input id="username" name="username" type="text" autocomplete="username" required>
+            </label>
+            <label class="field">
+                <span>密码</span>
+                <input id="password" name="password" type="password" autocomplete="current-password" required>
+            </label>
+            <button class="primary-button" type="submit">登录</button>
+        </form>
+        <p id="login-error" class="message error" hidden></p>
+    </section>
 </main>
+<script th:src="@{/js/web-console.js}"></script>
 </body>
 </html>

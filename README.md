@@ -73,3 +73,44 @@ java -jar target/quark-auto-save-1.0.0-SNAPSHOT-exec.jar --app.run-mode=once --a
 - `MAIL_PORT`
 - `MAIL_USERNAME`
 - `MAIL_PASSWORD`
+
+## Web 管理台
+
+默认 `server` 模式现在会启动一个带登录保护的管理台，用于：
+
+- 查看任务列表
+- 手动执行全部任务或单个任务
+- 查看最近执行记录
+- 在线编辑并保存 `config/tasks.yml`
+
+### 启动方式
+
+```bash
+mvn -s settings.xml spring-boot:run
+```
+
+启动后访问：
+
+- `http://localhost:8080/login`
+
+### 管理台凭据
+
+建议通过环境变量配置：
+
+```bash
+set WEB_CONSOLE_USERNAME=admin
+set WEB_CONSOLE_PASSWORD=change-me
+```
+
+如果未显式配置，将使用默认值：
+
+- 用户名：`admin`
+- 密码：`admin123`
+
+## `once` 模式说明
+
+GitHub Actions 继续使用单次执行模式，不依赖 Web 管理台登录流程：
+
+```bash
+java -jar target/quark-auto-save-1.0.0-SNAPSHOT-exec.jar --app.run-mode=once --app.task-file=config/tasks.yml --app.notification.mail.enabled=false
+```
