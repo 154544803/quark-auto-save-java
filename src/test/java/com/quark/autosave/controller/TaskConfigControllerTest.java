@@ -6,8 +6,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.quark.autosave.model.web.EditableAccountView;
+import com.quark.autosave.model.web.EditableTaskView;
 import com.quark.autosave.model.web.TaskConfigDocument;
+import com.quark.autosave.model.web.StructuredTaskConfigDocument;
 import com.quark.autosave.service.TaskConfigFileService;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -28,21 +32,63 @@ class TaskConfigControllerTest {
 
     @Test
     void shouldReturnCurrentTaskConfig() throws Exception {
-        when(taskConfigFileService.readCurrentConfig())
-            .thenReturn(new TaskConfigDocument("accounts: []", java.util.List.of("demo-task")));
+        when(taskConfigFileService.readStructuredConfig())
+            .thenReturn(new StructuredTaskConfigDocument(
+                List.of(new EditableAccountView("primary", "cookie", true, 1)),
+                List.of(new EditableTaskView(
+                    "demo-task",
+                    "primary",
+                    "https://pan.quark.cn/s/demo",
+                    "/demo",
+                    ".*",
+                    "",
+                    true,
+                    false,
+                    List.of(1, 3, 5),
+                    null)),
+                new TaskConfigDocument("accounts: []", List.of("demo-task"))));
 
         mockMvc.perform(get("/api/config/tasks"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.rawYaml").value("accounts: []"))
-            .andExpect(jsonPath("$.taskNames[0]").value("demo-task"));
+            .andExpect(jsonPath("$.accounts[0].name").value("primary"))
+            .andExpect(jsonPath("$.tasks[0].name").value("demo-task"))
+            .andExpect(jsonPath("$.advanced.rawYaml").value("accounts: []"));
     }
 
     @Test
-    void shouldSaveTaskConfig() throws Exception {
-        when(taskConfigFileService.save("accounts: []"))
-            .thenReturn(new TaskConfigDocument("accounts: []", java.util.List.of()));
+    void shouldSaveStructuredTaskConfig() throws Exception {
+        when(taskConfigFileService.saveStructured(Mockito.any()))
+            .thenReturn(new StructuredTaskConfigDocument(
+                List.of(new EditableAccountView("primary", "cookie", true, 1)),
+                List.of(new EditableTaskView(
+                    "demo-task",
+                    "primary",
+                    "https://pan.quark.cn/s/demo",
+                    "/folder",
+                    ".*",
+                    "",
+                    true,
+                    false,
+                    List.of(1, 3),
+                    null)),
+                new TaskConfigDocument("accounts: []", List.of("demo-task"))));
 
-        mockMvc.perform(put("/api/config/tasks")
+        mockMvc.perform(put("/api/config/tasks/structured")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {"accounts":[{"name":"primary","cookie":"cookie"}],
+                     "tasks":[{"name":"demo-task","account":"primary","shareUrl":"https://pan.quark.cn/s/demo","savePath":"/folder","pattern":".*","replace":"","enabled":true,"ignoreExtension":false,"runWeek":[1,3],"endDate":null}]}
+                    """))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.tasks[0].savePath").value("/folder"));
+    }
+
+    @Test
+    void shouldSaveAdvancedTaskConfig() throws Exception {
+        when(taskConfigFileService.save("accounts: []"))
+            .thenReturn(new TaskConfigDocument("accounts: []", List.of()));
+
+        mockMvc.perform(put("/api/config/tasks/advanced")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                     {"rawYaml":"accounts: []"}

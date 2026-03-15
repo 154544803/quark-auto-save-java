@@ -1,6 +1,8 @@
 package com.quark.autosave.controller;
 
+import com.quark.autosave.model.web.SaveStructuredTaskConfigRequest;
 import com.quark.autosave.model.web.SaveTaskConfigRequest;
+import com.quark.autosave.model.web.StructuredTaskConfigDocument;
 import com.quark.autosave.model.web.TaskConfigDocument;
 import com.quark.autosave.service.TaskConfigFileService;
 import java.util.Map;
@@ -23,12 +25,17 @@ public class TaskConfigController {
     }
 
     @GetMapping
-    public TaskConfigDocument getCurrentConfig() {
-        return taskConfigFileService.readCurrentConfig();
+    public StructuredTaskConfigDocument getCurrentConfig() {
+        return taskConfigFileService.readStructuredConfig();
     }
 
-    @PutMapping
-    public TaskConfigDocument saveConfig(@RequestBody SaveTaskConfigRequest request) {
+    @PutMapping("/structured")
+    public StructuredTaskConfigDocument saveStructuredConfig(@RequestBody SaveStructuredTaskConfigRequest request) {
+        return taskConfigFileService.saveStructured(request);
+    }
+
+    @PutMapping("/advanced")
+    public TaskConfigDocument saveAdvancedConfig(@RequestBody SaveTaskConfigRequest request) {
         return taskConfigFileService.save(request.rawYaml());
     }
 
