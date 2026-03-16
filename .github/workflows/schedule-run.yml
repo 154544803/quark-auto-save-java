@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   schedule:
     # GitHub Actions 使用 UTC，这里 12:00 UTC 等于北京时间 20:00
-    - cron: "0 12 * * *"
+    - cron: "30 11 * * *"
 
 jobs:
   run:
