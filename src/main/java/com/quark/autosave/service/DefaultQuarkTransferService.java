@@ -41,7 +41,7 @@ public class DefaultQuarkTransferService implements QuarkTransferService {
             new HashSet<>()
         );
         String directoryFid = quarkClient.ensureDirectory(accountConfig, taskDefinition.getSavePath());
-        List<String> existingNames = quarkClient.listTargetFileNames(accountConfig, directoryFid);
+        List<QuarkFileItem> existingFiles = quarkClient.listTargetFiles(accountConfig, directoryFid);
 
         List<QuarkFileItem> filesToSave = new ArrayList<>();
         for (QuarkFileItem shareFile : shareFiles) {
@@ -54,8 +54,20 @@ public class DefaultQuarkTransferService implements QuarkTransferService {
                 shareFile.getFileName()
             );
             shareFile.setFileNameAfterRename(renamedFileName);
-            if (exists(existingNames, renamedFileName, taskDefinition.isIgnoreExtension())) {
-                continue;
+            QuarkFileItem existingFile = findExistingFile(existingFiles, renamedFileName, taskDefinition.isIgnoreExtension());
+            if (existingFile != null) {
+                Long shareFileTime = shareFile.getUpdatedAt();
+                Long existingFileTime = existingFile.getUpdatedAt();
+                // 文件名相同：时间相同则覆盖，时间不同则保留最新的
+                if (shareFileTime != null && existingFileTime != null && shareFileTime.equals(existingFileTime)) {
+                    quarkClient.deleteFile(accountConfig, existingFile.getFid());
+                } else if (shareFileTime != null && existingFileTime != null && shareFileTime.compareTo(existingFileTime) <= 0) {
+                    // 分享文件时间 <= 已有文件时间，跳过
+                    continue;
+                } else {
+                    // 分享文件时间 > 已有文件时间，删除旧的，保存新的
+                    quarkClient.deleteFile(accountConfig, existingFile.getFid());
+                }
             }
             filesToSave.add(shareFile);
         }
@@ -118,12 +130,18 @@ public class DefaultQuarkTransferService implements QuarkTransferService {
         return Pattern.compile(pattern).matcher(fileName).find();
     }
 
-    private boolean exists(List<String> existingNames, String targetName, boolean ignoreExtension) {
+    private QuarkFileItem findExistingFile(List<QuarkFileItem> existingFiles, String targetName, boolean ignoreExtension) {
         if (!ignoreExtension) {
-            return existingNames.contains(targetName);
+            return existingFiles.stream()
+                .filter(f -> f.getFileName().equals(targetName))
+                .findFirst()
+                .orElse(null);
         }
         String normalizedTargetName = stripExtension(targetName);
-        return existingNames.stream().map(this::stripExtension).anyMatch(normalizedTargetName::equals);
+        return existingFiles.stream()
+            .filter(f -> stripExtension(f.getFileName()).equals(normalizedTargetName))
+            .findFirst()
+            .orElse(null);
     }
 
     private String stripExtension(String fileName) {
