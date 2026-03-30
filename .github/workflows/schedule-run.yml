@@ -44,7 +44,7 @@ jobs:
               ignore-extension: false
               # 1-7 表示周一到周日
               run-week:
-                - 7
+                - 1
             - name: 剑来
               account: primary
               # 使用你提供的夸克分享链接
