@@ -10,6 +10,7 @@ public class AppProperties {
     private String taskFile = "config/tasks.yml";
     private final ScheduleProperties schedule = new ScheduleProperties();
     private final NotificationProperties notification = new NotificationProperties();
+    private final WebConsoleProperties webConsole = new WebConsoleProperties();
 
     public String getRunMode() {
         return runMode;
@@ -41,6 +42,10 @@ public class AppProperties {
 
     public NotificationProperties getNotification() {
         return notification;
+    }
+
+    public WebConsoleProperties getWebConsole() {
+        return webConsole;
     }
 
     public static class ScheduleProperties {
@@ -111,6 +116,37 @@ public class AppProperties {
 
         public void setTo(String to) {
             this.to = to;
+        }
+    }
+
+    public static class WebConsoleProperties {
+
+        private boolean enabled = true;
+        private String username = "admin";
+        private String password = "admin123";
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
         }
     }
 }

@@ -33,6 +33,10 @@ app:
       enabled: false
       subject-prefix: "[quark-auto-save]"
       to: ${MAIL_TO:}
+  web-console:
+    enabled: true
+    username: ${WEB_CONSOLE_USERNAME:admin}
+    password: ${WEB_CONSOLE_PASSWORD:admin123}
 
 logging:
   level:

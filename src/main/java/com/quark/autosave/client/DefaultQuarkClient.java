@@ -124,7 +124,14 @@ public class DefaultQuarkClient implements QuarkClient {
 
     @Override
     public List<String> listTargetFileNames(AccountConfig accountConfig, String directoryFid) {
-        List<String> result = new ArrayList<>();
+        return listTargetFiles(accountConfig, directoryFid).stream()
+            .map(QuarkFileItem::getFileName)
+            .toList();
+    }
+
+    @Override
+    public List<QuarkFileItem> listTargetFiles(AccountConfig accountConfig, String directoryFid) {
+        List<QuarkFileItem> result = new ArrayList<>();
         int page = 1;
         while (true) {
             Map<String, Object> params = new LinkedHashMap<>(baseDriveParams());
@@ -146,7 +153,7 @@ public class DefaultQuarkClient implements QuarkClient {
                 break;
             }
             for (JsonNode item : listNode) {
-                result.add(item.path("file_name").asText());
+                result.add(toFileItem(item));
             }
             if (listNode.size() < 50) {
                 break;
@@ -190,6 +197,14 @@ public class DefaultQuarkClient implements QuarkClient {
             Map.of("fid", fileId, "file_name", targetFileName));
     }
 
+    @Override
+    public void deleteFile(AccountConfig accountConfig, String fileId) {
+        request(accountConfig.getCookie(), HttpMethod.POST,
+            BASE_URL + "/1/clouddrive/file/delete",
+            baseDriveParams(),
+            Map.of("fid_list", List.of(fileId)));
+    }
+
     private JsonNode queryTask(AccountConfig accountConfig, String taskId) {
         for (int retryIndex = 0; retryIndex < 60; retryIndex++) {
             Map<String, Object> params = new LinkedHashMap<>(baseDriveParams());
@@ -227,6 +242,7 @@ public class DefaultQuarkClient implements QuarkClient {
         fileItem.setShareFidToken(jsonNode.path("share_fid_token").asText());
         fileItem.setFileName(jsonNode.path("file_name").asText());
         fileItem.setDir(jsonNode.path("dir").asBoolean(false));
+        fileItem.setUpdatedAt(jsonNode.path("updated_at").asLong());
         return fileItem;
     }
 

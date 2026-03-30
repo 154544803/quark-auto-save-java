@@ -7,6 +7,7 @@ public class QuarkFileItem {
     private String fileName;
     private boolean dir;
     private String fileNameAfterRename;
+    private Long updatedAt;
 
     public String getFid() {
         return fid;
@@ -46,5 +47,13 @@ public class QuarkFileItem {
 
     public void setFileNameAfterRename(String fileNameAfterRename) {
         this.fileNameAfterRename = fileNameAfterRename;
+    }
+
+    public Long getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Long updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

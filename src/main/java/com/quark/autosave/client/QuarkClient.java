@@ -15,8 +15,12 @@ public interface QuarkClient {
 
     List<String> listTargetFileNames(AccountConfig accountConfig, String directoryFid);
 
+    List<QuarkFileItem> listTargetFiles(AccountConfig accountConfig, String directoryFid);
+
     List<String> saveFiles(AccountConfig accountConfig, ShareParseResult shareParseResult, String stoken,
                            String directoryFid, List<QuarkFileItem> fileItems);
 
     void renameFile(AccountConfig accountConfig, String fileId, String targetFileName);
+
+    void deleteFile(AccountConfig accountConfig, String fileId);
 }
