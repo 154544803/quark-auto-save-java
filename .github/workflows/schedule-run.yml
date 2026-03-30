@@ -33,7 +33,7 @@ jobs:
             - name: 仙逆
               account: primary
               # 使用你提供的夸克分享链接
-              share-url: https://pan.quark.cn/s/21c18f2ea6ab
+              share-url: https://pan.quark.cn/s/e00c9bcb1a3a
               # 转存到你夸克网盘中的目标目录
               save-path: /动漫/仙逆
               # 只转存视频文件
